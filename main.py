@@ -1,13 +1,8 @@
-from Game import Game
-import random
+from Simulator import Simulator
+from Agent import HumanAgent, RandomAgent
 
-game = Game()
-
-while not game.is_game_over():
-	print(game.ascii())
-	print(f"Turn: {game.turn.upper()}")
-	if game.turn == 'y':
-		game.move(random.randint(0, 5))
-	else:
-		move = input("Move? (0 to 5) ")
-		game.move(int(move))
+# Start a simulator that lets me play with an AI that chooses a random action.
+me = HumanAgent()
+ai = RandomAgent()
+simulator = Simulator(me, ai)
+simulator.start()
