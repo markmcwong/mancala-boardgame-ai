@@ -18,10 +18,10 @@ class Game:
 	def move(self, i):
 		if self.turn == 'y': i += 7
 
-		if self.is_game_over():
+		seeds = self.board[i]
+		if self.is_game_over() or seeds == 0:
 			return self.turn
 
-		seeds = self.board[i]
 		self.board[i] = 0
 		while seeds > 0:
 			i = (i + 1) % 14
@@ -60,5 +60,5 @@ class Game:
 			"│    │ {} │ {} │ {} │ {} │ {} │ {} │    │\n".format(*scores[12:6:-1]) +
 			"│ {} ├────┼────┼────┼────┼────┼────┤ {} │\n".format(scores[13], scores[6]) +
 			"│    │ {} │ {} │ {} │ {} │ {} │ {} │    │\n".format(*scores[0:6]) +
-			"└────┴────┴────┴────┴────┴────┴────┴────┘\n"
+			"└────┴────┴────┴────┴────┴────┴────┴────┘"
 		)
