@@ -8,7 +8,7 @@ class Simulator:
 
 	def start(self):
 		game = self.game
-		while not game.is_game_over():
+		while not game.is_over():
 			print()
 			print(game.ascii())
 			print(f"Turn: {game.turn.upper()}")

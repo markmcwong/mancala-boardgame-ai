@@ -9,7 +9,7 @@ class Game:
 		self.turn = 'x'
 
 	# The criteria for the game to end is if either player's house has no more seeds.
-	def is_game_over(self):
+	def is_over(self):
 		return sum(self.board[0:6]) * sum(self.board[7:13]) == 0
 
 	# `i` can take the value of 0, 1, 2, 3, 4, 5.
@@ -19,7 +19,7 @@ class Game:
 		if self.turn == 'y': i += 7
 
 		seeds = self.board[i]
-		if self.is_game_over() or seeds == 0:
+		if self.is_over() or seeds == 0:
 			return self.turn
 
 		self.board[i] = 0
