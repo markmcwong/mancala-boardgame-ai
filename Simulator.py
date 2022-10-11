@@ -15,9 +15,9 @@ class Simulator:
 
 			move = -1
 			if game.turn == 'x':
-				move = self.agent_x.policy(game.board)
+				move = self.agent_x.policy(game)
 			else:
-				move = self.agent_y.policy(game.board)
+				move = self.agent_y.policy(game)
 
 			self.game = game.move(move)
 			print(f"Move chosen: {move}")
