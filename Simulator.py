@@ -21,3 +21,14 @@ class Simulator:
 
 			self.game = game.move(move)
 			print(f"Move chosen: {move}")
+
+		score_x = self.game.score('x')
+		score_y = self.game.score('y')
+
+		message = "It's a draw!"
+		if score_x > score_y: message = "Winner: X"
+		if score_x < score_y: message = "Winner: Y"
+
+		print()
+		print(self.game.ascii())
+		print(f"Game over! {message}")
