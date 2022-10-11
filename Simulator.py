@@ -7,8 +7,8 @@ class Simulator:
 		self.agent_y = agent_y
 
 	def start(self):
-		game = self.game
-		while not game.is_over():
+		while not self.game.is_over():
+			game = self.game
 			print()
 			print(game.ascii())
 			print(f"Turn: {game.turn.upper()}")
@@ -19,5 +19,5 @@ class Simulator:
 			else:
 				move = self.agent_y.policy(game.board)
 
-			game.move(move)
+			self.game = game.move(move)
 			print(f"Move chosen: {move}")
