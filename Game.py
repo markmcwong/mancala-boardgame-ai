@@ -56,6 +56,9 @@ class Game:
 
 		return Game(board, turn)
 
+	def score(self, turn):
+		return self.board[6] if turn == 'x' else self.board[13]
+
 	# Returns the ASCII art representation of the board
 	def ascii(self):
 		scores = [str(score).zfill(2) for score in self.board]
