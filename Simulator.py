@@ -13,14 +13,14 @@ class Simulator:
 			print(game.ascii())
 			print(f"Turn: {game.turn.upper()}")
 
-			move = -1
+			action = -1
 			if game.turn == 'x':
-				move = self.agent_x.policy(game)
+				action = self.agent_x.policy(game)
 			else:
-				move = self.agent_y.policy(game)
+				action = self.agent_y.policy(game)
 
-			self.game = game.move(move)
-			print(f"Move chosen: {move}")
+			self.game = game.action(action)
+			print(f"Action chosen: {action}")
 
 		score_x = self.game.score('x')
 		score_y = self.game.score('y')

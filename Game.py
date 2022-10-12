@@ -14,8 +14,8 @@ class Game:
 
 	# `i` can take the value of 0, 1, 2, 3, 4, 5.
 	# Each value represents the index of the current player's house.
-	# This method returns a new state of the Game object after the move is played.
-	def move(self, i):
+	# This method returns a new state of the Game object after the action is played.
+	def action(self, i):
 		board = list(self.board)
 		turn = self.turn
 
