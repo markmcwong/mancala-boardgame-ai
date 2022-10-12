@@ -37,3 +37,34 @@ class GreedyAgent(Agent):
 			best_action = action
 
 		return best_action
+
+# An agent that searches through the game tree over a certain depth with alpha-beta pruning.
+class MinimaxAgent(Agent):
+	def __init__(self, depth):
+		self.depth = depth
+
+	def ab(self, game, depth, a, b):
+		turn = game.turn
+		if depth == 0 or game.is_over():
+			return (game.score('x') - game.score('y'), None)
+
+		value = 0
+		if turn == 'x':
+			value = -99
+			for action in game.actions():
+				next_game = game.action(action)
+				value = max(value, self.ab(next_game, depth - 1, a, b)[0])
+				if value >= b: break
+				a = max(a, value)
+		else:
+			value = 99
+			for action in game.actions():
+				next_game = game.action(action)
+				value = min(value, self.ab(next_game, depth - 1, a, b)[0])
+				if value <= a: break
+				b = min(b, value)
+
+		return (value, action)
+
+	def policy(self, game):
+		return self.ab(game, self.depth, -99, 99)[1]
