@@ -8,7 +8,7 @@ class Agent:
 # An agent that has a policy that simply selects a random action.
 class RandomAgent(Agent):
 	def policy(self, game):
-		return random.randint(0, 5)
+		return random.choice(game.actions())
 
 # An agent that determines its best action from an actual person.
 class HumanAgent(Agent):
@@ -23,14 +23,14 @@ class GreedyAgent(Agent):
 		best_action = -1
 
 		turn = game.turn
-		for action in game.actions(game.turn):
+		for action in game.actions():
 			if turn == 'x' and game.board[action] == 0: continue;
 			if turn == 'y' and game.board[action + 7] == 0: continue;
 
 			next_game = game.action(action)
 			if next_game.turn == turn: return action
 
-			next_score = next_game.score(turn)
+			next_score = next_game.score()
 			if next_score <= max_score: continue
 
 			max_score = next_score
