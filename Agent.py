@@ -23,7 +23,7 @@ class GreedyAgent(Agent):
 		best_action = -1
 
 		turn = game.turn
-		for action in range(6):
+		for action in game.actions(game.turn):
 			if turn == 'x' and game.board[action] == 0: continue;
 			if turn == 'y' and game.board[action + 7] == 0: continue;
 

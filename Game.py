@@ -56,6 +56,14 @@ class Game:
 
 		return Game(board, turn)
 
+	def actions(self, turn):
+		if self.is_over(): return []
+
+		if turn == 'x':
+			return [i for i in range(6) if self.board[i] > 0]
+		else:
+			return [i for i in range(6) if self.board[i + 7] > 0]
+
 	def score(self, turn):
 		return self.board[6] if turn == 'x' else self.board[13]
 
