@@ -1,7 +1,7 @@
 from Simulator import Simulator
-from Agent import *
+from agents import *
 
-# Start a simulator that lets me play with an AI that chooses a random action.
+# Define the two agents that will play the game.
 p1 = HumanAgent()
 p2 = MinimaxAgent(9)
 simulator = Simulator(p1, p2)

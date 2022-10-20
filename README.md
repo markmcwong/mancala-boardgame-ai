@@ -5,13 +5,11 @@
 # main.py
 
 from Simulator import Simulator
-from Agent import *
+from agents import *
 
-# Define the two agents that will play the game
+# Define the two agents that will play the game.
 p1 = HumanAgent()
 p2 = MinimaxAgent(9)
-
-# Start the simulator for the two agents
 simulator = Simulator(p1, p2)
 simulator.start()
 ```
