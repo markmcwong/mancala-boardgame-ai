@@ -9,12 +9,16 @@ from agents import MinimaxAgent
 
 action_available = 6
 state_space_size = (14,)
-train_episodes = 300  # An episode a full game
+train_episodes = 1000  # An episode a full game
 test_episodes = 50
 epsilon = 1  # Epsilon-greedy algorithm in initialized at 1 meaning every step is random at the start 
 max_epsilon = 1  # You can't explore more than 100% of the time
 min_epsilon = 0.01  # At a minimum, we'll always explore 1% of the time
 decay = 0.00001
+learning_rate = 0.1  # Learning rate
+discount_factor = 0.8
+MIN_REPLAY_SIZE = 200
+
 class DeepQLearningAgent():
     def __init__(self, is_training=True):
         self.model = None
@@ -53,8 +57,8 @@ class DeepQLearningAgent():
 
     def policy(self, game):
         if(self.model is None):
-            # self.main()
-            self.model = tf.keras.models.load_model('deepQLearning.h5')
+            self.main()
+            # self.model = tf.keras.models.load_model('deepQLearning.h5')
             self.exit_training_mode()
 
         board_reshaped = np.array(game.board).reshape(
@@ -63,7 +67,7 @@ class DeepQLearningAgent():
         actions = game.actions()
         action_scores = [action_scores[i]
                          if i in actions else -100 for i in range(len(action_scores))]
-        # print(action_scores, actions)
+
         return np.argmax(action_scores)
 
     def select_action(self, valid_actions, board, episode_number):
@@ -82,24 +86,22 @@ class DeepQLearningAgent():
         return action
 
     def train(self, replay_memory, model, target_model, done):
-        learning_rate = 0.1  # Learning rate
-        discount_factor = 0.8
-
-        MIN_REPLAY_SIZE = 200
 
         if len(replay_memory) < MIN_REPLAY_SIZE:
             return
 
         batch_size = 64 * 2
         mini_batch = random.sample(replay_memory, batch_size)
-        # print(mini_batch[0])
+
         current_states = np.array([transition[0] for transition in mini_batch])
         current_qs_list = model.predict(current_states)
+
         new_current_states = np.array([transition[3] for transition in mini_batch])
         future_qs_list = target_model.predict(new_current_states)
 
         X = []
         Y = []
+
         for index, (observation, action, reward, new_observation, done) in enumerate(mini_batch):
             if not done:
                 max_future_q = reward + discount_factor * \
@@ -113,10 +115,12 @@ class DeepQLearningAgent():
 
             X.append(observation)
             Y.append(current_qs)
+
         model.fit(np.array(X), np.array(Y),
                 batch_size=batch_size, verbose=0, shuffle=True)
 
     def get_new_state(self, curr_state, action, player_2):
+        
         new_state = Game(curr_state.action(action).board, turn='y')
         reward = new_state.score(
             turn='x') - new_state.score(turn='y')
@@ -133,10 +137,12 @@ class DeepQLearningAgent():
 
     def main(self):
         replay_memory = deque(maxlen=5000)
-        
         print("start model initiation")
+
         model = self.create_model(state_space_size, action_available)
         target_model = self.create_model(state_space_size, action_available)
+        target_model.set_weights(model.get_weights())
+
         steps_to_update_target_model = 0
 
         player_2 = MinimaxAgent(9)
