@@ -116,6 +116,21 @@ class DeepQLearningAgent():
         model.fit(np.array(X), np.array(Y),
                 batch_size=batch_size, verbose=0, shuffle=True)
 
+    def get_new_state(self, curr_state, action, player_2):
+        new_state = Game(curr_state.action(action).board, turn='y')
+        reward = new_state.score(
+            turn='x') - new_state.score(turn='y')
+        done = new_state.is_over()
+
+        if(not new_state.is_over()):
+            player_2_board = new_state.action(player_2.policy(
+                new_state))
+            reward = player_2_board.score(
+                turn='x') - player_2_board.score(turn='y')
+            done = player_2_board.is_over()
+
+        return new_state, reward, done
+
     def main(self):
         replay_memory = deque(maxlen=5000)
         
@@ -129,35 +144,24 @@ class DeepQLearningAgent():
         print("start model training")
         for episode in range(train_episodes):
             total_training_rewards = 0
-            observation = Game()
+            state = Game()
             done = False
             while not done:
                 steps_to_update_target_model += 1
                 # 2. Explore using the Epsilon Greedy Exploration Strategy
-                action = self.select_action(observation.actions(), observation.board, episode)
+                action = self.select_action(
+                    state.actions(), state.board, episode)
+                new_state, reward, done = self.get_new_state(
+                    state, action, player_2)
                 
-                new_observation = Game(observation.action(action).board, turn='y')
-                reward = new_observation.score(
-                    turn='x') - new_observation.score(turn='y')
-                done = new_observation.is_over()
-
-                if(not new_observation.is_over()):
-                    player_2_board = new_observation.action(player_2.policy(
-                        new_observation))
-                    reward = player_2_board.score(
-                        turn='x') - player_2_board.score(turn='y')
-                    done = player_2_board.is_over()
-                # print(observation.board, "action : ",
-                #       action, new_observation.board, "reward : ", reward, observation.actions())
-
                 replay_memory.append(
-                    [observation.board, action, reward, player_2_board.board, done])
+                    [state.board, action, reward, new_state.board, done])
 
                 # 3. Update the Main Network using the Bellman Equation
                 if steps_to_update_target_model % 4 == 0 or done:
                     self.train(replay_memory, model, target_model, done)
 
-                observation = player_2_board
+                state = new_state
                 total_training_rewards += reward
 
                 if done:
