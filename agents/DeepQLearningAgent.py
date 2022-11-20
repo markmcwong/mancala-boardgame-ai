@@ -143,7 +143,6 @@ class DeepQLearningAgent():
     def main(self):
         replay_memory = deque(maxlen=5000)
         print("start model initiation")
-        tf.keras.utils.disable_interactive_logging()
 
         model = self.create_model(state_space_size, action_available)
         target_model = self.create_model(state_space_size, action_available)
